@@ -3,7 +3,7 @@ import csv
 import numpy as np
 import scipy
 convolve = np.convolve
-from casus.filter_editor.filter.filter import fourier as fourier
+from Waves.filter_editor.filter.filter import fourier as fourier
 import scipy.signal as signal
 
 
