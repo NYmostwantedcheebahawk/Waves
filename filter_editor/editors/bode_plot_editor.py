@@ -1,9 +1,6 @@
 from Waves.filter_editor.editors.plot_editor_calculator import plot_editor_calculator
-from Waves.filter_editor.utilities.manual_modification import manual_modification as manual_modification
-import math
 from Waves.filter_editor.utilities.filter_equations import *
-from Waves.filter_editor.utilities.manual_modification import manual_modification
-from Waves.filter_editor.utilities.transfert_function import transfer_function as transfer_function
+
 
 
 class bode_plot_editor():
@@ -33,16 +30,10 @@ class bode_plot_editor():
             i = 0
             while i < len(self.filter_fusion.transfer_functions) :
                 transfer_function = self.filter_fusion.transfer_functions[i];
-                frequency_handicap = 0
-                impulsion_handicap = 0
-                if transfer_function.frequency_handicap is not None:
-                    frequency_handicap = transfer_function.frequency_handicap
-                if transfer_function.impulsion_handicap is not None:
-                    impulsion_handicap = transfer_function.impulsion_handicap
                 if self.filter_fusion.transfer_functions[i].type == "passe bas":
-                    self.impulsion, self.freq = self.plot_editor_calculator.passe_bas_bode(transfer_function,filter_equations,frequency_handicap,impulsion_handicap,self.resolution,self.impulsion,self.freq)
+                    self.impulsion, self.freq = self.plot_editor_calculator.passe_bas_bode(transfer_function,filter_equations,self.resolution,self.impulsion,self.freq)
                 if self.filter_fusion.transfer_functions[i].type == "passe haut":
-                    self.impulsion, self.freq = self.plot_editor_calculator.passe_haut_bode(transfer_function,filter_equations,frequency_handicap,impulsion_handicap,self.resolution,self.impulsion,self.freq)
+                    self.impulsion, self.freq = self.plot_editor_calculator.passe_haut_bode(transfer_function,filter_equations,self.resolution,self.impulsion,self.freq)
                 if self.filter_fusion.transfer_functions[i].proportioned_filter != None:
                     self.impulsion,self.freq = self.plot_editor_calculator.proportioned_filter_bode(self.filter_fusion.transfer_functions[i].proportioned_filter, self.impulsion, self.freq, self.resolution)
                 i = i+1

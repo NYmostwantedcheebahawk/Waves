@@ -12,21 +12,6 @@ class events:
         self.controller = controller
         self.my_interface = my_interface
 
-    def __add_manual_modification_event__(self):
-        """
-        permet de prendre une fourchette de donnée modifier et de la réintégrer dans l'ensemble des données
-        """
-        first = 0
-        last = 0
-        attenuation = 0
-        if self.my_interface.dashboard_window.widget.cut_off.text() != '':
-            first = int(self.my_interface.dashboard_window.widget.cut_off.text())
-        if self.my_interface.dashboard_window.widget.cut_off2.text() != '':
-            last = int(self.my_interface.dashboard_window.widget.cut_off2.text())
-        if self.my_interface.dashboard_window.widget.attenuation_num_taps.text() != '':
-            attenuation = int(self.my_interface.dashboard_window.widget.attenuation_num_taps.text())
-        self.controller.add_manual_modification(first, last, attenuation)
-
     def __add_filter_event__(self):
         first = 0
         middle = 0
@@ -34,8 +19,6 @@ class events:
         cut_off1 = 0
         cut_off2 = 0
         order = 1
-        handicap_frequency = 0
-        handicap_impulsion = 0
         resolution = 1
         resolutiondb = 1
         type = "passe bas"
@@ -52,15 +35,11 @@ class events:
             cut_off2 = int(self.my_interface.dashboard_window.widget.cut_off2.text())
         if self.my_interface.dashboard_window.widget.order.text() != '':
             order = int(self.my_interface.dashboard_window.widget.order.text())
-        if self.my_interface.dashboard_window.widget.handicap_frequency.text() != '':
-            handicap_frequency = int(self.my_interface.dashboard_window.widget.handicap_frequency.text())
-        if self.my_interface.dashboard_window.widget.handicap_impulsion.text() != '':
-            handicap_impulsion = int(self.my_interface.dashboard_window.widget.handicap_impulsion.text())
         if self.my_interface.dashboard_window.widget.resolution.text() != '':
             resolution = int(self.my_interface.dashboard_window.widget.resolution.text())
         if self.my_interface.dashboard_window.widget.type.text() != '':
             type = self.my_interface.dashboard_window.widget.type.text()
-        self.controller.add_filter(cut_off1, None, order, resolution,resolutiondb ,handicap_frequency, handicap_impulsion, type, first, middle,last,first_impulsion,middle_impulsion,last_impulsion)
+        self.controller.add_filter(cut_off1, None, order, resolution,resolutiondb, type, first, middle,last,first_impulsion,middle_impulsion,last_impulsion)
 
     def __add_routed_filter_event__(self):
 

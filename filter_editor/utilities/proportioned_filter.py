@@ -14,8 +14,6 @@ class proportioned_filter():
         self.routed_filter_type = routed_filter_type
         self.dephased_first_frequency = dephased_first_frequency
         self.dephased_last_frequency = dephased_last_frequency
-        self.frequency_handicap = None
-        self.impulsion_handicap = None
         self.real_cut_off = real_cut_off
         if(dephased_first_frequency == -1.0):
             self.start_frequency_connected = True

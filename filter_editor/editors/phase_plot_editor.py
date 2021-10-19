@@ -2,7 +2,6 @@ from Waves.filter_editor.editors.plot_editor_calculator import plot_editor_calcu
 from Waves.filter_editor.utilities.filter_equations import filter_equations as filter_equations
 import math
 
-from Waves.filter_editor.utilities.manual_modification import manual_modification
 
 
 class phase_plot_editor():
@@ -31,18 +30,12 @@ class phase_plot_editor():
         i = 0
         while i < len(self.filter_fusion.transfer_functions) :
             transfer_function = self.filter_fusion.transfer_functions[i];
-            frequency_handicap = 0
-            impulsion_handicap = 0
-            if transfer_function.frequency_handicap is not None:
-                frequency_handicap = transfer_function.frequency_handicap
-            if transfer_function.impulsion_handicap is not None:
-                impulsion_handicap = transfer_function.impulsion_handicap
             if self.filter_fusion.transfer_functions[i].type == "passe bas":
-                self.impulsion, self.freq = self.plot_editor_calculator.passe_bas_phase(transfer_function,filter_equations,frequency_handicap,impulsion_handicap,self.resolution,self.impulsion,self.freq)
+                self.impulsion, self.freq = self.plot_editor_calculator.passe_bas_phase(transfer_function,filter_equations,self.resolution,self.impulsion,self.freq)
             if self.filter_fusion.transfer_functions[i].type == "passe haut":
-                self.impulsion, self.freq = self.plot_editor_calculator.passe_haut_phase(transfer_function,filter_equations,frequency_handicap,impulsion_handicap,self.resolution,self.impulsion,self.freq)
+                self.impulsion, self.freq = self.plot_editor_calculator.passe_haut_phase(transfer_function,filter_equations,self.resolution,self.impulsion,self.freq)
             if self.filter_fusion.transfer_functions[i].proportioned_filter != None:
-                self.impulsion,self.freq = self.plot_editor_calculator.proportioned_filter_phase(self.filter_fusion.transfer_functions[i].proportioned_filter, self.impulsion, self.freq, self.resolution,filter_equations)
+                self.impulsion,self.freq = self.plot_editor_calculator.proportioned_filter_phase(self.filter_fusion.transfer_functions[i].proportioned_filter, self.impulsion, self.freq, self.resolution)
             i = i+1
 
 
@@ -57,22 +50,6 @@ class phase_plot_editor():
                                                        transfer_functions)
 
         return proportion_filter
-
-    def __insert_manual_modification__(self, first, last, attenuation):
-        index_transfer_functions_affected_by_modification = self.__find_transfer_functions_affected_by_modification__(
-            first, last)
-        if index_transfer_functions_affected_by_modification != None:
-            for x in range (0, len(index_transfer_functions_affected_by_modification)):
-                if self.filter_fusion.transfer_functions[x].frequency_min <= first:
-                    start_of_modification = first
-                else:
-                    start_of_modification = self.filter_fusion.transfer_functions[x].frequency_min
-                if self.filter_fusion.transfer_functions[x].frequency_max >= last:
-                    end_of_modification = last
-                else:
-                    end_of_modification = self.filter_fusion.transfer_functions[x].frequency_max
-                manual_modification_to_add = manual_modification(start_of_modification, end_of_modification, attenuation)
-                self.filter_fusion.transfer_functions[x].__insert_manual_modification__(manual_modification_to_add)
 
     def __insert_transfer_function__(self,transfer_function_to_add):
         self.filter_fusion.__insert_transfer_function__(transfer_function_to_add)

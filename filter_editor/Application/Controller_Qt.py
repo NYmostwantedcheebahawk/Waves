@@ -34,7 +34,6 @@ class controller_qt:
         :param model: -> pipeline > le pipeline du controlleur
         Définie toute les connection entre les objets qt et les événements
         """
-        self.my_interface.dashboard_window.manual_modification.triggered.connect(self.events.__add_manual_modification_event__)
         self.my_interface.dashboard_window.filter_fusion.triggered.connect(self.events.__add_filter_event__)
         self.my_interface.dashboard_window.routed_filter.triggered.connect(self.events.__add_routed_filter_event__)
         self.my_interface.dashboard_window.phase.triggered.connect(self.events.__switch_to_phase__)

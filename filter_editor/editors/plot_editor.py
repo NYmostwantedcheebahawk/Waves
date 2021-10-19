@@ -1,9 +1,7 @@
 from Waves.filter_editor.editors.bode_plot_editor import bode_plot_editor
 from Waves.filter_editor.editors.phase_plot_editor import phase_plot_editor
-from Waves.filter_editor.utilities.manual_modification import manual_modification as manual_modification
 import math
 from Waves.filter_editor.utilities.filter_equations import *
-from Waves.filter_editor.utilities.manual_modification import manual_modification
 from Waves.filter_editor.utilities.transfert_function import transfer_function as transfer_function
 
 
@@ -21,8 +19,6 @@ class plot_editor():
 
     def __calculate_routed_filter__(self,proportion_filter,transfer_function):
         return self.state.__calculate_routed_filter__(proportion_filter,transfer_function)
-    def __insert_manual_modification__(self, first, last, attenuation):
-        self.state.__insert_manual_modification__(first,last,attenuation)
 
     def __change_cutoff_1__(self, cutoff):
         self.state.__change_cutoff_1__(cutoff)
