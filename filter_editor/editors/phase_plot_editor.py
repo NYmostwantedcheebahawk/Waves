@@ -60,18 +60,5 @@ class phase_plot_editor():
     def __change_cutoff_2__(self, cutoff):
         self.filter_fusion.__change_cutoff_2__(cutoff)
 
-    def __find_transfer_functions_affected_by_modification__(self, first, last):
-        index_transfer_functions_affected_by_modification = []
-        for x in range(0, len(self.filter_fusion.transfer_functions)):
-            second_search = x + 1
-            if self.filter_fusion.transfer_functions[x].frequency_min <= first:
-                index_transfer_functions_affected_by_modification.insert(-1, x)
-                if(x+1 < len(self.filter_fusion.transfer_functions)):
-                    while self.filter_fusion.transfer_functions[second_search].frequency_max <= last:
-                        index_transfer_functions_affected_by_modification.insert(-1, second_search)
-                        second_search = second_search + 1
-                return index_transfer_functions_affected_by_modification
-            return None
-
     def __convert_resolution_to_frequency__(self,frequency,resolution):
         return frequency*resolution;

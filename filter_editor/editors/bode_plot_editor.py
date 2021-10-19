@@ -55,22 +55,6 @@ class bode_plot_editor():
             proportion_filter.dephased_last_frequency = current_frequency2
         return proportion_filter
 
-    def __insert_manual_modification__(self, first, last, attenuation):
-        index_transfer_functions_affected_by_modification = self.__find_transfer_functions_affected_by_modification__(
-            first, last)
-        if index_transfer_functions_affected_by_modification != None:
-            for x in range (0, len(index_transfer_functions_affected_by_modification)):
-                if self.filter_fusion.transfer_functions[x].frequency_min <= first:
-                    start_of_modification = first
-                else:
-                    start_of_modification = self.filter_fusion.transfer_functions[x].frequency_min
-                if self.filter_fusion.transfer_functions[x].frequency_max >= last:
-                    end_of_modification = last
-                else:
-                    end_of_modification = self.filter_fusion.transfer_functions[x].frequency_max
-                manual_modification_to_add = manual_modification(start_of_modification, end_of_modification, attenuation)
-                self.filter_fusion.transfer_functions[x].__insert_manual_modification__(manual_modification_to_add)
-
     def __insert_transfer_function__(self,transfer_function_to_add):
         self.filter_fusion.__insert_transfer_function__(transfer_function_to_add)
 
@@ -79,19 +63,6 @@ class bode_plot_editor():
 
     def __change_cutoff_2__(self, cutoff):
         self.filter_fusion.__change_cutoff_2__(cutoff)
-
-    def __find_transfer_functions_affected_by_modification__(self, first, last):
-        index_transfer_functions_affected_by_modification = []
-        for x in range(0, len(self.filter_fusion.transfer_functions)):
-            second_search = x + 1
-            if self.filter_fusion.transfer_functions[x].frequency_min <= first:
-                index_transfer_functions_affected_by_modification.insert(-1, x)
-                if(x+1 < len(self.filter_fusion.transfer_functions)):
-                    while self.filter_fusion.transfer_functions[second_search].frequency_max <= last:
-                        index_transfer_functions_affected_by_modification.insert(-1, second_search)
-                        second_search = second_search + 1
-                return index_transfer_functions_affected_by_modification
-            return None
 
 
     def __convert_resolution_to_frequency__(self,frequency,resolution):
