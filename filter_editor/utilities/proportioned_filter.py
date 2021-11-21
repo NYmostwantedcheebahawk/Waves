@@ -6,7 +6,7 @@ from Waves.filter_editor.utilities.filter_equations import filter_equations
 class proportioned_filter():
     def __init__(self,proportioned_impulsion_first, proportioned_impulsion_last, real_first_impulsion,
                  real_last_impulsion, routed_filter_type, dephased_first_frequency, dephased_last_frequency,
-                 real_cut_off,proportioned_filter = None):
+                 real_cut_off,periodic_frequency,relativeOrAbsolute,pattern,attached,proportioned_filter = None):
         self.proportioned_impulsion_first = proportioned_impulsion_first
         self.proportioned_impulsion_last = proportioned_impulsion_last
         self.real_first_impulsion = real_first_impulsion
@@ -15,6 +15,7 @@ class proportioned_filter():
         self.dephased_first_frequency = dephased_first_frequency
         self.dephased_last_frequency = dephased_last_frequency
         self.real_cut_off = real_cut_off
+        self.priority = 0
         if(dephased_first_frequency == -1.0):
             self.start_frequency_connected = True
         else:
@@ -28,12 +29,19 @@ class proportioned_filter():
         self.resolution_frequency = 0
         self.resolution_db = 0
         self.dephasing = 0
+        self.periodic_frequency = periodic_frequency
+        self.pattern = pattern
+        self.attached = attached
+        self.relativeOrAbsolute = relativeOrAbsolute
+
+
         if (proportioned_filter != None):
             self.proportioned_filters = [proportioned_filter]
         else:
             self.proportioned_filters= None
 
     def __get_impulsion__(self,current_frequency):
+
         if(self.routed_filter_type == "passe bas routed"):
             return filter_equations.log_time_20(filter_equations,
                                      filter_equations.lower_pass_bode(
@@ -62,4 +70,9 @@ class proportioned_filter():
     def __convert_resolution_to_frequency__(self, frequency, resolution):
             return frequency * resolution;
 
+    def __insert_proportioned_filter__(self,proportioned_filter):
+        if(self.proportioned_filters == None):
+            self.proportioned_filters = [proportioned_filter]
+        else:
+            self.proportioned_filters.insert(-1, proportioned_filter)
 

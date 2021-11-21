@@ -1,4 +1,5 @@
 from Waves.filter_editor.editors.plot_editor_calculator import plot_editor_calculator
+from Waves.filter_editor.utilities.Equation_Maker import Equation_Maker
 from Waves.filter_editor.utilities.filter_equations import *
 
 
@@ -28,6 +29,9 @@ class bode_plot_editor():
     def __calculate_transfer_function__(self):
         if(self.name == "filter_editor_bode"):
             i = 0
+            Equation_maker = Equation_Maker(self.filter_fusion)
+            Equation_maker.__build_equation__()
+            print(Equation_maker.string_equation)
             while i < len(self.filter_fusion.transfer_functions) :
                 transfer_function = self.filter_fusion.transfer_functions[i];
                 if self.filter_fusion.transfer_functions[i].type == "passe bas":
@@ -40,7 +44,8 @@ class bode_plot_editor():
 
     def __calculate_routed_filter__(self,proportion_filter,transfer_function):
         proportion_filter.dephasing,proportion_filter.real_start_frequency ,proportion_filter.real_end_frequency ,proportion_filter.resolution_frequency, proportion_filter.resolution_db , current_frequency1 , current_frequency2= \
-            filter_equations.routed_filter_resolutions(filter_equations,float(proportion_filter.real_cut_off),
+            filter_equations.routed_filter_resolutions(filter_equations,
+                                                       float(proportion_filter.real_cut_off),
                                                        float(proportion_filter.proportioned_impulsion_first),
                                                        float(proportion_filter.proportioned_impulsion_last),
                                                        float(proportion_filter.dephased_first_frequency),

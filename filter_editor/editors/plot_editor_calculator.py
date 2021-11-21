@@ -6,6 +6,8 @@ class plot_editor_calculator():
             for e in range(int(proportioned_filter[x].dephased_first_frequency),int(proportioned_filter[x].dephased_last_frequency)):
                 impulsion[e] = proportioned_filter[x].__get_impulsion__(e * resolution)
                 freq[e] = self.__convert_resolution_to_frequency__(e, resolution)
+            if proportioned_filter[x].proportioned_filters != None:
+                impulsion,freq = self.proportioned_filter_bode(proportioned_filter[x].proportioned_filters,impulsion,freq,resolution)
         return impulsion, freq
 
     def passe_bas_bode(self,transfer_function,filter_equations,resolution,impulsion,freq):
@@ -41,6 +43,8 @@ class plot_editor_calculator():
                 impulsion[e] = proportioned_filter[x].__get_phase__(
                     e * resolution)
                 freq[e] = self.__convert_resolution_to_frequency__(e, resolution)
+            if proportioned_filter[x].proportioned_filters != None:
+                impulsion,freq = self.proportioned_filter_phase(proportioned_filter[x].proportioned_filters,impulsion,freq,resolution)
         return impulsion,freq
 
     def passe_bas_phase(self,transfer_function,filter_equations,resolution,impulsion,freq):

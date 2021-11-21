@@ -16,6 +16,7 @@ class transfer_function():
         self.resolution_db = resolutiondb
         self.type = type
         self.filter_equation = filter_equations()
+        self.priority = 0
         if impulsion_first == None:
             self.impulsion_first = filter_equations.log_time_20(self,filter_equations.lower_pass_bode(self,frequency_min,cutoff1))
         else:

@@ -2,8 +2,11 @@ import Waves.filter_editor.Application.Model as models
 from Waves.filter_editor.Application.Controller_Qt import controller_qt
 from Waves.filter_editor.editors.bode_plot_editor import bode_plot_editor
 from Waves.filter_editor.editors.plot_editor import plot_editor
+from Waves.filter_editor.utilities.filter_equations import filter_equations
 from Waves.filter_editor.utilities.filter_fusion import filter_fusion
 from Waves.filter_editor.utilities.transfert_function import transfer_function
+from Waves.filter_editor.utilities.Equation_Maker import Equation_Maker
+from Waves.filter_editor.Equation_Decoder.Equation_Decoder import Equation_Decoder
 
 class Controller():
     """
@@ -19,6 +22,7 @@ class Controller():
         self.plot_editor = plot_editor("Bode",0, 1000, 1, self.filter_fusion)
         self.model = models.Model(self.plot_editor)
         self.model.data.transformations[-1].__calculate_transfer_function__()
+        self.priority = 0
 
         if(view_type == "controller_qt"):
             self.controller_qt = controller_qt(self.model,self)
@@ -32,8 +36,14 @@ class Controller():
         self.controller_qt.redefine_vue()
 
     def add_routed_filter(self, proportion_filter):
-        self.model.data.transformations[-1].state.filter_fusion.transfer_functions[-1].__insert_proportioned_filter__(
-            self.model.data.transformations[-1].__calculate_routed_filter__(proportion_filter, self.model.data.transformations[-1].state.filter_fusion.transfer_functions))
+        self.priority  = self.priority +1
+        filter = filter_equations.find_filter(filter_equations, proportion_filter.real_first_impulsion,
+                                     proportion_filter.real_first_impulsion,
+                                     proportion_filter.dephased_first_frequency,
+                                     proportion_filter.dephased_last_frequency, self.model.data.transformations[-1].state.filter_fusion.transfer_functions)
+        new_proportion_filter = self.model.data.transformations[-1].__calculate_routed_filter__(proportion_filter, self.model.data.transformations[-1].state.filter_fusion.transfer_functions)
+        new_proportion_filter.priority = self.priority
+        filter.__insert_proportioned_filter__(new_proportion_filter)
         self.model.data.transformations[-1].__calculate_transfer_function__()
         self.controller_qt.redefine_vue()
 
@@ -41,3 +51,10 @@ class Controller():
         self.model.data.transformations[-1].__change_state__(state)
         self.model.data.transformations[-1].__calculate_transfer_function__()
         self.controller_qt.redefine_vue()
+
+    def __get_equation_plot__(self):
+        equation = Equation_Maker(self.filter_fusion)
+        equation.__build_equation__()
+        plot = Equation_Decoder(equation)
+        plot.__decode_equation__()
+        self.controller_qt.redefine_vue_equation(plot)

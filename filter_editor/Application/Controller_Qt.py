@@ -38,6 +38,7 @@ class controller_qt:
         self.my_interface.dashboard_window.routed_filter.triggered.connect(self.events.__add_routed_filter_event__)
         self.my_interface.dashboard_window.phase.triggered.connect(self.events.__switch_to_phase__)
         self.my_interface.dashboard_window.bode.triggered.connect(self.events.__switch_to_bode__)
+        self.my_interface.dashboard_window.equation.triggered.connect(self.events.__compute_equation_event__)
 
     def define_x_data(self,model,data_index = -1):
         """
@@ -87,3 +88,18 @@ class controller_qt:
         window_type.qwt_plot.replot()
         window_type.qwt_plot.show()
         self.my_interface.show_dashboard_filter_editing_window()
+
+    def redefine_vue_equation(self,equation_decoder):
+        """
+        Cette fonction orchestre toute les changement nécessaire pour mettre à jours la vue
+        :param index: -> int > index du placement dans le pipeline (-1 est un shortcut de python pour acceder au dernier element du array);
+        """
+        dataX = []
+        dataY = []
+        for i in range(0,2000):
+            dataX.append(i)
+            if i == 700 or i == 400:
+                print(i)
+            dataY.append(equation_decoder.__get_impulsion__(i))
+        self.my_interface.graphical_window_test_equation.set_curve(dataX,dataY)
+        self.my_interface.show_graphic(self.my_interface.graphical_window_test_equation)

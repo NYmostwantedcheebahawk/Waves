@@ -1,6 +1,6 @@
 from Waves.filter_editor.editors.plot_editor_calculator import plot_editor_calculator
 from Waves.filter_editor.utilities.filter_equations import filter_equations as filter_equations
-import math
+from Waves.filter_editor.utilities.Equation_Maker import Equation_Maker
 
 
 
@@ -17,6 +17,7 @@ class phase_plot_editor():
         self.impulsion = [0]*((self.frequency_max-self.frequency_min)*self.resolution)
         self.plot_editor_calculator = plot_editor_calculator()
 
+
     def __plug__(self, editor):
         self.filter_equations = filter_equations()
         self.frequency_min = editor.frequency_min
@@ -28,6 +29,7 @@ class phase_plot_editor():
 
     def __calculate_transfer_function__(self):
         i = 0
+
         while i < len(self.filter_fusion.transfer_functions) :
             transfer_function = self.filter_fusion.transfer_functions[i];
             if self.filter_fusion.transfer_functions[i].type == "passe bas":

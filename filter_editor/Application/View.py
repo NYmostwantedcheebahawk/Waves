@@ -27,6 +27,7 @@ class graphical_interface():
         Instantiation des 4 différentes types de fenêtres
         """
         self.graphical_window = wrapper_qwt(graphical_window())
+        self.graphical_window_test_equation = wrapper_qwt(graphical_window())
         self.dashboard_window = dashboard()
 
     def show_graphic(self,window):
@@ -92,6 +93,7 @@ class dashboard(QMainWindow):
        self.order = QAction("order", self)
        self.phase = QAction("changeToPhase",self)
        self.bode = QAction("changeToBode",self)
+       self.equation = QAction("compute_equation",self)
        self.actions.addAction(self.cutoff1)
        self.actions.addAction(self.cutoff2)
        self.actions.addAction(self.filter_fusion)
@@ -99,6 +101,7 @@ class dashboard(QMainWindow):
        self.actions.addAction(self.order)
        self.actions.addAction(self.phase)
        self.actions.addAction(self.bode)
+       self.actions.addAction(self.equation)
 
    def define(self):
        """
@@ -147,6 +150,17 @@ class dashboard(QMainWindow):
        self.layout_text3.addWidget(self.widget.real_cut_off_label)
        self.layout_text3.addWidget(self.widget.real_cut_off)
 
+       self.layout_text3.addWidget(self.widget.periodic_frequency_label)
+       self.layout_text3.addWidget(self.widget.periodic_frequency)
+
+       self.layout_text3.addWidget(self.widget.attached_label)
+       self.layout_text3.addWidget(self.widget.attached)
+
+       self.layout_text3.addWidget(self.widget.relative_or_absolute_label)
+       self.layout_text3.addWidget(self.widget.relative_or_absolute)
+
+       self.layout_text3.addWidget(self.widget.pattern_label)
+       self.layout_text3.addWidget(self.widget.pattern)
 
 class dashboard_content(QWidget):
     """
@@ -198,6 +212,17 @@ class dashboard_content(QWidget):
         self.real_cut_off_label = QLabel("real_cut_off:")
         self.real_cut_off = QLineEdit()
 
+        self.attached_label = QLabel("attached:")
+        self.attached = QLineEdit()
+
+        self.relative_or_absolute_label = QLabel("relativeOrAbsolute:")
+        self.relative_or_absolute = QLineEdit()
+
+        self.periodic_frequency_label = QLabel("periodic_frequency:")
+        self.periodic_frequency = QLineEdit()
+
+        self.pattern_label = QLabel("pattern:")
+        self.pattern = QLineEdit()
 
 class plot_state(QMainWindow):
     """
