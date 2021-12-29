@@ -29,7 +29,6 @@ class phase_plot_editor():
 
     def __calculate_transfer_function__(self):
         i = 0
-
         while i < len(self.filter_fusion.transfer_functions) :
             transfer_function = self.filter_fusion.transfer_functions[i];
             if self.filter_fusion.transfer_functions[i].type == "passe bas":
@@ -43,12 +42,12 @@ class phase_plot_editor():
 
     def __calculate_routed_filter__(self,proportion_filter,transfer_functions):
         proportion_filter.dephasing,proportion_filter.real_start_frequency ,proportion_filter.real_end_frequency ,proportion_filter.resolution_frequency, proportion_filter.resolution_db = \
-            filter_equations.routed_filter_resolutions(filter_equations,float(proportion_filter.real_cut_off),
+            filter_equations.routed_filter_resolutions(filter_equations, float(proportion_filter.real_cut_off),
                                                        float(proportion_filter.proportioned_impulsion_first)
-                                                       ,float(proportion_filter.proportioned_impulsion_last),float(proportion_filter.dephased_first_frequency),
+                                                       , float(proportion_filter.proportioned_impulsion_last), float(proportion_filter.dephased_first_frequency),
                                                        float(proportion_filter.dephased_last_frequency),
                                                        float(proportion_filter.real_first_impulsion),
-                                                       float(proportion_filter.real_last_impulsion),proportion_filter.routed_filter_type,
+                                                       float(proportion_filter.real_last_impulsion), proportion_filter.type,
                                                        transfer_functions)
 
         return proportion_filter

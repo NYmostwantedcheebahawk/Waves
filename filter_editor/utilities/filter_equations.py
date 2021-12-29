@@ -29,7 +29,10 @@ class filter_equations():
         return 90.0-math.degrees(math.atan2(current_frequency,cutoff_frequency))
 
     def high_pass_bode(self,current_frequency, cutoff_frequency):
-        return (current_frequency/float(cutoff_frequency))/math.sqrt(1 + math.pow(current_frequency / float(cutoff_frequency), 2))
+        if(current_frequency/float(cutoff_frequency))/math.sqrt(1 + math.pow(current_frequency / float(cutoff_frequency), 2)) < 0:
+            return 0
+        else:
+            return (current_frequency/float(cutoff_frequency))/math.sqrt(1 + math.pow(current_frequency / float(cutoff_frequency), 2))
 
     def find_filter(self,impulsion_first,impulsion_last,dephased_first_frequency,dephased_last_frequency,transfer_function, comparable_value = None):
         for i in range(0,len(transfer_function)):
@@ -43,22 +46,22 @@ class filter_equations():
                                                             dephased_last_frequency, transfer_function[i].proportioned_filter[x])
                     if(value != None):
                         if(comparable_value == None):
-                            return value
+                            pass
                         else:
                             if(comparable_value != value):
-                                return value
+                                pass
                             else:
-                                return transfer_function[i]
+                                value = transfer_function[i]
                 if value == None:
                     value = self.find_curve_transfer_function(self,impulsion_first, impulsion_last, dephased_first_frequency,
                                                         dephased_last_frequency,
                                                         transfer_function[i])
                 if(value != None):
                     if (comparable_value == None):
-                        return value
+                        pass
                     else:
                         if (comparable_value != value):
-                            return value
+                            pass
                         else:
                             value = None
 
@@ -68,10 +71,10 @@ class filter_equations():
                                                           transfer_function[i])
                 if (value != None):
                     if (comparable_value == None):
-                        return value
+                        pass
                     else:
                         if (comparable_value != value):
-                            return value
+                            pass
                         else:
                             value = None
         return value
@@ -128,6 +131,7 @@ class filter_equations():
 
     def find_curve_proportioned_filter(self,impulsion_first,impulsion_last,dephased_first_frequency,dephased_last_frequency,proportioned_filter):
         found = True
+
         if impulsion_last > impulsion_first:
             if proportioned_filter.real_first_impulsion > proportioned_filter.real_last_impulsion:
                 if proportioned_filter.real_first_impulsion < impulsion_last:
@@ -187,50 +191,57 @@ class filter_equations():
             cut_off = filter.cutoff1
         else:
             cut_off = filter.real_cut_off
-        if filter_type == "passe bas routed":
-            if current_frequency1 == -1.0:
-                current_frequency1 = math.sqrt(math.pow((1/self.logInverse(self,impulsion1)),2)-1)*cut_off
-                impulsion1 = self.log_time_20(self, self.lower_pass_bode(self, int(current_frequency1), cut_off))
-            if current_frequency2 == -1.0:
-                current_frequency2 = math.sqrt(math.pow((1/self.logInverse(self,impulsion2)),2)-1)*cut_off
-                impulsion2 = self.log_time_20(self, self.lower_pass_bode(self, int(current_frequency2), cut_off))
-            real_start_frequency = math.sqrt(math.pow((1/self.logInverse(self,start_db)),2)-1)*cutoff
-            real_end_frequency = math.sqrt(math.pow((1/self.logInverse(self,end_db)),2)-1)*cutoff
-            resolution_frequency = (real_end_frequency-real_start_frequency)/(current_frequency2-current_frequency1)
-            resolution_db = (start_db-end_db)/(impulsion1-impulsion2)
-            de_dephasing = start_db/resolution_db - impulsion1
 
-
-        elif filter_type == "passe haut routed":
-            if current_frequency1 == -1.0:
+        if current_frequency1 == -1.0:
+            if(filter.type == "passe haut routed"):
                 if impulsion1 == 0:
                     current_frequency1 = (0.99 * cut_off) / (math.sqrt(1 - math.pow(0.99, 2)))
-                    current_frequency1 = int(current_frequency1)
                     impulsion1 = self.log_time_20(self, self.high_pass_bode(self, current_frequency1, cut_off))
                 else:
                     current_frequency1 = (self.logInverse(self, impulsion1) * cut_off) / (
                         math.sqrt(1 - math.pow(self.logInverse(self, impulsion1), 2)))
-                    current_frequency1 = int(current_frequency1)
                     impulsion1 = self.log_time_20(self, self.high_pass_bode(self, current_frequency1, cut_off))
-            if current_frequency2 == -1.0:
+            elif(filter.type == "passe bas routed"):
+                current_frequency1 = math.sqrt(math.pow((1/self.logInverse(self,impulsion1)),2)-1)*cut_off
+                impulsion1 = self.log_time_20(self, self.lower_pass_bode(self, int(current_frequency1), cut_off))
+            elif (filter.type == "passe bas"):
+                current_frequency1 = math.sqrt(math.pow((1/self.logInverse(self,impulsion1)),2)-1)*cut_off
+                impulsion1 = self.log_time_20(self, self.lower_pass_bode(self, int(current_frequency1), cut_off))
+
+        if current_frequency2 == -1.0:
+            if(filter.type == "passe haut routed"):
                 if impulsion2 == 0:
                     current_frequency2 = (0.99 * 200) / (math.sqrt(1 - math.pow(0.99, 2)))
-                    impulsion2 = self.log_time_20(self, self.high_pass_bode(self,int(current_frequency2), cut_off))
+                    impulsion2 = self.log_time_20(self, self.high_pass_bode(self, current_frequency2, cut_off))
                 else:
                     current_frequency2 = (self.logInverse(self, impulsion2) * cut_off) / (
                         math.sqrt(1 - math.pow(self.logInverse(self, impulsion2), 2)))
-                    impulsion2 = self.log_time_20(self, self.high_pass_bode(self,int(current_frequency2), cut_off))
+                    impulsion2 = self.log_time_20(self, self.high_pass_bode(self, current_frequency2, cut_off))
+            elif(filter.type == "passe bas routed"):
+                current_frequency2 = math.sqrt(math.pow((1/self.logInverse(self,impulsion2)),2)-1)*cut_off
+                impulsion2 = self.log_time_20(self, self.lower_pass_bode(self, current_frequency2, cut_off))
+            elif (filter.type == "passe bas"):
+                current_frequency2 = math.sqrt(math.pow((1/self.logInverse(self,impulsion2)),2)-1)*cut_off
+                impulsion2 = self.log_time_20(self, self.lower_pass_bode(self, current_frequency2, cut_off))
+
+
+        if filter_type == "passe bas routed":
+            real_start_frequency = math.sqrt(math.pow((1/self.logInverse(self,start_db)),2)-1)*cutoff
+            real_end_frequency = math.sqrt(math.pow((1/self.logInverse(self,end_db)),2)-1)*cutoff
+
+        elif filter_type == "passe haut routed":
             real_start_frequency = (self.logInverse(self,start_db)* cutoff)/(math.sqrt(1-math.pow(self.logInverse(self,start_db),2)))
             if end_db == 0:
                 real_end_frequency = (0.99* cutoff)/(math.sqrt(1-math.pow(0.99,2)))
             else:
                 real_end_frequency = (self.logInverse(self, end_db) * cutoff) / (
                     math.sqrt(1 - math.pow(self.logInverse(self, end_db), 2)))
-            resolution_frequency = (real_end_frequency - real_start_frequency) / (current_frequency2 - current_frequency1)
-            resolution_db = (start_db - end_db) / (impulsion1 - impulsion2)
-            de_dephasing = start_db / resolution_db - impulsion1
-            print(resolution_db)
-        return de_dephasing,real_start_frequency, real_end_frequency, resolution_frequency, resolution_db, current_frequency1 ,current_frequency2
+
+        resolution_frequency = (real_end_frequency - real_start_frequency) / (current_frequency2 - current_frequency1)
+        resolution_db = (start_db - end_db) / (impulsion1 - impulsion2)
+        de_dephasing = start_db / resolution_db - impulsion1
+        print(resolution_db)
+        return de_dephasing,real_start_frequency, real_end_frequency, resolution_frequency, resolution_db, current_frequency1 ,current_frequency2,filter.priority
 
     def routed_filter_convertion_from_bode_to_phase(self,proportioned_filter,current_frequency1, current_frequency2, filter_type,transfer_function):
         filter = self.find_filter(self,proportioned_filter.real_first_impulsion,proportioned_filter.real_last_impulsion,current_frequency1,current_frequency2,transfer_function,proportioned_filter)

@@ -43,7 +43,7 @@ class bode_plot_editor():
                 i = i+1
 
     def __calculate_routed_filter__(self,proportion_filter,transfer_function):
-        proportion_filter.dephasing,proportion_filter.real_start_frequency ,proportion_filter.real_end_frequency ,proportion_filter.resolution_frequency, proportion_filter.resolution_db , current_frequency1 , current_frequency2= \
+        proportion_filter.dephasing,proportion_filter.real_start_frequency ,proportion_filter.real_end_frequency ,proportion_filter.resolution_frequency, proportion_filter.resolution_db , current_frequency1 , current_frequency2, proportion_filter.parent= \
             filter_equations.routed_filter_resolutions(filter_equations,
                                                        float(proportion_filter.real_cut_off),
                                                        float(proportion_filter.proportioned_impulsion_first),
@@ -52,7 +52,7 @@ class bode_plot_editor():
                                                        float(proportion_filter.dephased_last_frequency),
                                                        float(proportion_filter.real_first_impulsion),
                                                        float(proportion_filter.real_last_impulsion),
-                                                       proportion_filter.routed_filter_type,
+                                                       proportion_filter.type,
                                                        transfer_function)
         if proportion_filter.dephased_first_frequency == -1:
             proportion_filter.dephased_first_frequency = current_frequency1

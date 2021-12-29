@@ -8,6 +8,7 @@ class tranfert_function_equation():
         self.cutoff = cut_off
         self.type = type
         self.priority = 0
+        self.parent = 0
 
     def __get_impulsion__(self,current_frequency):
         if self.type == "lower_pass":
@@ -24,5 +25,5 @@ class tranfert_function_equation():
     def __get_last_frequency__(self):
         return "check_frequency"
 
-    def __update__(self):
+    def __update__(self,frequency1,frequency2,impulsion,p):
         pass

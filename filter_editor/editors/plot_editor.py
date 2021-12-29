@@ -16,7 +16,6 @@ class plot_editor():
     def __calculate_transfer_function__(self):
         self.state.__calculate_transfer_function__()
 
-
     def __calculate_routed_filter__(self,proportion_filter,transfer_function):
         return self.state.__calculate_routed_filter__(proportion_filter,transfer_function)
 
@@ -42,9 +41,9 @@ class plot_editor():
                 transfer_function = self.state.filter_fusion.transfer_functions[i];
                 if transfer_function.proportioned_filter != None:
                     for x in range(0, len(transfer_function.proportioned_filter)):
-                        self.state.filter_fusion.transfer_functions[i].proportioned_filter[x] = filter_equations.routed_filter_convertion_from_phase_to_bode(filter_equations,transfer_function.proportioned_filter[x],
-                            transfer_function.proportioned_filter[x].dephased_first_frequency,
-                            transfer_function.proportioned_filter[x].dephased_last_frequency, transfer_function.proportioned_filter[x].routed_filter_type,self.state.filter_fusion.transfer_functions)
+                        self.state.filter_fusion.transfer_functions[i].proportioned_filter[x] = filter_equations.routed_filter_convertion_from_phase_to_bode(filter_equations, transfer_function.proportioned_filter[x],
+                                                                                                                                                             transfer_function.proportioned_filter[x].dephased_first_frequency,
+                                                                                                                                                             transfer_function.proportioned_filter[x].dephased_last_frequency, transfer_function.proportioned_filter[x].type, self.state.filter_fusion.transfer_functions)
                 i = i+1
         elif(state == "Phase"):
             interState = self.state
@@ -56,7 +55,7 @@ class plot_editor():
                 transfer_function = self.state.filter_fusion.transfer_functions[i];
                 if transfer_function.proportioned_filter != None:
                     for x in range(0, len(transfer_function.proportioned_filter)):
-                        self.state.filter_fusion.transfer_functions[i].proportioned_filter[x] = filter_equations.routed_filter_convertion_from_bode_to_phase(filter_equations,transfer_function.proportioned_filter[x],
-                            transfer_function.proportioned_filter[x].dephased_first_frequency,
-                            transfer_function.proportioned_filter[x].dephased_last_frequency, transfer_function.proportioned_filter[x].routed_filter_type,self.state.filter_fusion.transfer_functions)
+                        self.state.filter_fusion.transfer_functions[i].proportioned_filter[x] = filter_equations.routed_filter_convertion_from_bode_to_phase(filter_equations, transfer_function.proportioned_filter[x],
+                                                                                                                                                             transfer_function.proportioned_filter[x].dephased_first_frequency,
+                                                                                                                                                             transfer_function.proportioned_filter[x].dephased_last_frequency, transfer_function.proportioned_filter[x].type, self.state.filter_fusion.transfer_functions)
                 i = i+1

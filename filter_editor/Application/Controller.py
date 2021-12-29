@@ -29,9 +29,9 @@ class Controller():
 
 
     def add_filter(self,cutoff1, cutoff2, order, resolution, resolutiondb, type, frequency_min, frequency_middle ,frequency_max, impulsion_first, impulsion_middle, impulsion_last):
-        transfer_function_to_add = transfer_function(cutoff1,cutoff2, order, resolution,resolutiondb, None, type,frequency_min, frequency_middle,
-                                                     frequency_max, impulsion_first, impulsion_middle, impulsion_last)
+        transfer_function_to_add = transfer_function(cutoff1, cutoff2, order, resolution, resolutiondb, None, type, frequency_min, frequency_middle, frequency_max, impulsion_first, impulsion_middle, impulsion_last)
         self.model.data.transformations[-1].__insert_transfer_function__(transfer_function_to_add)
+        ##here
         self.model.data.transformations[-1].__calculate_transfer_function__()
         self.controller_qt.redefine_vue()
 
@@ -44,10 +44,22 @@ class Controller():
         new_proportion_filter = self.model.data.transformations[-1].__calculate_routed_filter__(proportion_filter, self.model.data.transformations[-1].state.filter_fusion.transfer_functions)
         new_proportion_filter.priority = self.priority
         filter.__insert_proportioned_filter__(new_proportion_filter)
+        i1 = 0
+        if "routed" not in filter.type:
+            if "bas" in filter.type:
+                i1 = filter_equations.log_time_20(filter_equations,filter_equations.lower_pass_bode(filter_equations,proportion_filter.dephased_last_frequency,filter.cutoff1))
+            elif "haut" in filter.type:
+                i1 = filter_equations.log_time_20(filter_equations,filter_equations.high_pass_bode(filter_equations,proportion_filter.dephased_last_frequency,filter.cutoff1))
+        else:
+            i1 = filter.__get_impulsion__(proportion_filter.dephased_last_frequency)
+
+        proportion_filter.attached_to_parent = (proportion_filter.real_last_impulsion == i1)
+        ##here
         self.model.data.transformations[-1].__calculate_transfer_function__()
         self.controller_qt.redefine_vue()
 
     def switch_state(self,state):
+        ##here
         self.model.data.transformations[-1].__change_state__(state)
         self.model.data.transformations[-1].__calculate_transfer_function__()
         self.controller_qt.redefine_vue()

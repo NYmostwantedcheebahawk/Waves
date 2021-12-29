@@ -11,11 +11,12 @@ class proportioned_filter():
         self.proportioned_impulsion_last = proportioned_impulsion_last
         self.real_first_impulsion = real_first_impulsion
         self.real_last_impulsion = real_last_impulsion
-        self.routed_filter_type = routed_filter_type
+        self.type = routed_filter_type
         self.dephased_first_frequency = dephased_first_frequency
         self.dephased_last_frequency = dephased_last_frequency
         self.real_cut_off = real_cut_off
         self.priority = 0
+        self.parent = 0
         if(dephased_first_frequency == -1.0):
             self.start_frequency_connected = True
         else:
@@ -33,6 +34,7 @@ class proportioned_filter():
         self.pattern = pattern
         self.attached = attached
         self.relativeOrAbsolute = relativeOrAbsolute
+        self.attached_to_parent = False
 
 
         if (proportioned_filter != None):
@@ -42,7 +44,7 @@ class proportioned_filter():
 
     def __get_impulsion__(self,current_frequency):
 
-        if(self.routed_filter_type == "passe bas routed"):
+        if(self.type == "passe bas routed"):
             return filter_equations.log_time_20(filter_equations,
                                      filter_equations.lower_pass_bode(
                                          filter_equations,
@@ -50,7 +52,7 @@ class proportioned_filter():
                                          + self.real_start_frequency,
                                          self.real_cut_off)) / self.resolution_db - float(
             self.dephasing)
-        if (self.routed_filter_type == "passe haut routed"):
+        if (self.type == "passe haut routed"):
             return filter_equations.log_time_20(filter_equations,
                                                 filter_equations.high_pass_bode(
                                                 filter_equations,
@@ -60,10 +62,10 @@ class proportioned_filter():
                                                 self.real_cut_off)) / self.resolution_db - float(self.dephasing)
 
     def __get_phase__(self,current_frequency):
-        if(self.routed_filter_type == "passe bas routed"):
+        if(self.type == "passe bas routed"):
             return filter_equations.get_phase_lower_pass(filter_equations,(current_frequency- self.dephased_first_frequency)* self.resolution_frequency + self.real_start_frequency,self.real_cut_off)/self.resolution_db - float(self.dephasing)
 
-        elif(self.routed_filter_type == "passe haut routed"):
+        elif(self.type == "passe haut routed"):
             return filter_equations.get_phase_high_pass(filter_equations,(float(current_frequency)- float(self.dephased_first_frequency))* self.resolution_frequency + self.real_start_frequency,self.real_cut_off)/self.resolution_db - float(self.dephasing)
 
 

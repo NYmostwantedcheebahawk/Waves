@@ -24,3 +24,12 @@ class frequency_range():
             if self.pattern == "add":
                 self.frequency1 = self.frequency1 + self.frequency
             self.frequency2 = self.frequency1 + frequency_difference
+
+    def __comparison__(self,frequency_range):
+        if self.frequency2 != "infinity":
+            if frequency_range.frequency1 >self.frequency2:
+                return False
+            elif frequency_range.frequency1 <= self.frequency2:
+                return True
+        else:
+            return True
