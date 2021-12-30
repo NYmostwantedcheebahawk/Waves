@@ -77,4 +77,6 @@ class proportioned_filter():
             self.proportioned_filters = [proportioned_filter]
         else:
             self.proportioned_filters.insert(-1, proportioned_filter)
+    
+
 

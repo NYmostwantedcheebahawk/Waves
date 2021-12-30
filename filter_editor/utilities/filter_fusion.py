@@ -18,3 +18,4 @@ class filter_fusion():
         for x in range(0,len(self.transfer_functions)):
             if self.transfer_functions[x].frequency_min <= cutoff and self.transfer_functions[x].frequency_max >= cutoff:
                 self.transfer_functions[x].cutoff2 = cutoff
+

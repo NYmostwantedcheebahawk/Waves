@@ -9,7 +9,7 @@ class tranfert_function_equation():
         self.type = type
         self.priority = 0
         self.parent = 0
-
+        self.activated = True;
     def __get_impulsion__(self,current_frequency):
         if self.type == "lower_pass":
             return self.__lower_pass_bode__(current_frequency)

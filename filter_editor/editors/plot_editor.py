@@ -1,17 +1,55 @@
 from Waves.filter_editor.editors.bode_plot_editor import bode_plot_editor
 from Waves.filter_editor.editors.phase_plot_editor import phase_plot_editor
-import math
+from Waves.filter_editor.utilities import filter_fusion as ff
+from Waves.filter_editor.utilities.Equation_Maker import Equation_Maker
 from Waves.filter_editor.utilities.filter_equations import *
+from Waves.filter_editor.utilities.proportioned_filter import proportioned_filter as pf
 from Waves.filter_editor.utilities.transfert_function import transfer_function as transfer_function
 
 
 class plot_editor():
 
-    def __init__(self, state,frequency_min, frequency_max, resolution, filter_fusion):
-        if(state == "Bode"):
-            self.state = bode_plot_editor(frequency_min, frequency_max, resolution, filter_fusion)
-        elif(state == "Phase"):
-            self.state = phase_plot_editor(frequency_min, frequency_max, resolution, filter_fusion)
+    def __init__(self, state,frequency_min, frequency_max, resolution):
+         new_transfer_function = transfer_function(200, None, 1, 1, 1, "passe bas", 0, None, 1000, None, None, None)
+         filter_fusion = ff.filter_fusion(new_transfer_function)
+         if (state == "Bode"):
+             self.state = bode_plot_editor(frequency_min, frequency_max, resolution, filter_fusion)
+         elif (state == "Phase"):
+             self.state = phase_plot_editor(frequency_min, frequency_max, resolution, filter_fusion)
+         self.priority = 0
+
+    def __get_equation__(self):
+        result = Equation_Maker(self.state.filter_fusion)
+        result.__build_equation__()
+        return result.string_equation
+
+    def __add_routed_filter__(self,proportioned_impulsion_first, proportioned_impulsion_last, real_first_impulsion,real_last_impulsion, routed_filter_type, dephased_first_frequency, dephased_last_frequency,real_cut_off,periodic_frequency,relativeOrAbsolute,pattern,attached,proportioned_filter = None):
+         new_proportioned_filter = pf(float(proportioned_impulsion_first), float(proportioned_impulsion_last),float(real_first_impulsion), float(real_last_impulsion), routed_filter_type,float(dephased_first_frequency), float(dephased_last_frequency), float(real_cut_off),periodic_frequency, relativeOrAbsolute, pattern, attached)
+         self.priority  = self.priority +1
+         filter = self.state.find_filter(new_proportioned_filter.real_first_impulsion,new_proportioned_filter.real_first_impulsion,new_proportioned_filter.dephased_first_frequency,new_proportioned_filter.dephased_last_frequency,self.state.filter_fusion.transfer_functions)
+         new_proportioned_filter = self.__calculate_routed_filter__(new_proportioned_filter,self.state.filter_fusion.transfer_functions)
+         new_proportioned_filter.priority = self.priority
+         filter.__insert_proportioned_filter__(new_proportioned_filter)
+         i1 = 0
+         if "routed" not in filter.type:
+             if "bas" in filter.type:
+                 i1 = filter_equations.log_time_20(filter_equations, filter_equations.lower_pass_bode(filter_equations,
+                                                                                                      new_proportioned_filter.dephased_last_frequency,
+                                                                                                      filter.cutoff1))
+             elif "haut" in filter.type:
+                 i1 = filter_equations.log_time_20(filter_equations, filter_equations.high_pass_bode(filter_equations,
+                                                                                                     new_proportioned_filter.dephased_last_frequency,
+                                                                                                     filter.cutoff1))
+         else:
+             i1 = filter.__get_impulsion__(new_proportioned_filter.dephased_last_frequency)
+
+         new_proportioned_filter.attached_to_parent = (new_proportioned_filter.real_last_impulsion == i1)
+         self.__calculate_transfer_function__()
+
+    def __add_filter__(self,cutoff1, cutoff2, order, resolution, resolutiondb, type, frequency_min, frequency_middle ,frequency_max, impulsion_first, impulsion_middle, impulsion_last):
+        transfer_function_to_add = transfer_function(cutoff1, cutoff2, order, resolution, resolutiondb, type,frequency_min, frequency_middle, frequency_max, impulsion_first,impulsion_middle, impulsion_last, None)
+        self.state.__insert_transfer_function__(transfer_function_to_add)
+        self.state.__calculate_transfer_function__()
 
     def __calculate_transfer_function__(self):
         self.state.__calculate_transfer_function__()

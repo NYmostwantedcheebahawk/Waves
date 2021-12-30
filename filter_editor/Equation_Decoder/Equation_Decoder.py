@@ -16,12 +16,12 @@ class Equation_Decoder():
         return proportioned_filter_equation(dephased_first_frequency,dephased_last_frequency,proportioned_impulsion_first,proportioned_impulsion_last,real_first_impulsion,real_last_impulsion,routed_filter,resolution_frequency,real_start_frequency,real_end_frequency,real_cut_off,resolution_db, dephasing ,priority,attached,relativeOrAbsolute,parent_cut_off,parent,attachment_to_parent)
     def __update__(self,cpt,cpt2,frequency):
         impulsion = None
-
-        if(self.frequency[cpt].__comparison__(self.frequency[cpt2]) ):
+        if self.filters[cpt2].activated:
+            if(self.frequency[cpt].__comparison__(self.frequency[cpt2]) ):
                 impulsion = self.filters[cpt].__get_impulsion__(frequency)
 
-        print(self.filters[cpt2].parent)
-        self.filters[cpt2].__update__(self.frequency[cpt2].frequency1, self.frequency[cpt2].frequency2,impulsion,self.filters[self.filters[cpt2].parent])
+            print(self.filters[cpt2].parent)
+            self.filters[cpt2].__update__(self.frequency[cpt2].frequency1, self.frequency[cpt2].frequency2,impulsion,self.filters[self.filters[cpt2].parent])
 
     def __update_frequency__(self,frequency) :
        for i in range(0,len(self.frequency)):
@@ -31,9 +31,11 @@ class Equation_Decoder():
            else:
                 if last_frequency < frequency:
                     self.frequency[i].__update_frequency_range__()
+                    self.filters[i].activated = True
+
 
     def __decode_equation__(self):
-        array_different_filter = str(self.equation_string.string_equation).split("+")
+        array_different_filter = str(self.equation_string).split("+")
         for i in range(0,len(array_different_filter)):
             array_element_per_filter = array_different_filter[i].split("*")
             for e in range(0,len(array_element_per_filter)):
@@ -75,10 +77,13 @@ class Equation_Decoder():
             if self.frequency[i].__within_frequency__(frequency) :
                 if self.current_priority < int(self.filters[i].priority):
                     self.new_index = i
+                    self.filters[self.current_index].activated = False
+
 
         if self.new_index != self.current_index:
             self.__update__(self.current_index,self.new_index,frequency)
             self.current_index = self.new_index
+
 
         return self.filters[self.current_index].__get_impulsion__(frequency)
 

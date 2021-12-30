@@ -87,8 +87,7 @@ class events:
         if self.my_interface.dashboard_window.widget.attached != '':
             attached= self.my_interface.dashboard_window.widget.attached.text()
 
-        self.proportioned_filter = proportioned_filter(float(proportioned_impulsion_first), float(proportioned_impulsion_last), float(real_first_impulsion), float(real_last_impulsion), routed_filter_type, float(dephased_first_frequency), float(dephased_last_frequency),float(real_cut_off),periodic_frequency,relative_or_absolute,pattern,attached)
-        self.controller.add_routed_filter(self.proportioned_filter)
+        self.controller.add_routed_filter(float(proportioned_impulsion_first), float(proportioned_impulsion_last), float(real_first_impulsion), float(real_last_impulsion), routed_filter_type, float(dephased_first_frequency), float(dephased_last_frequency),float(real_cut_off),periodic_frequency,relative_or_absolute,pattern,attached)
 
     def __switch_to_phase__(self):
         self.controller.switch_state("Phase")
